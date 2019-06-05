@@ -75,7 +75,7 @@ COPY ./.env /var/www/.env
 COPY --from=composer_install /var/www/vendor /var/www/vendor
 
 ## CONFIGURE VAR
-RUN mkdir -p /var/cache /var/log
+RUN mkdir -p /var/www/var/cache /var/www/var/log
 RUN chown -Rv www-data:www-data /var/www/var
 VOLUME ["/var/www/var"]
 
