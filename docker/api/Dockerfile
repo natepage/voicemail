@@ -75,10 +75,8 @@ COPY ./.env /var/www/.env
 COPY --from=composer_install /var/www/vendor /var/www/vendor
 
 ## CONFIGURE VAR
-COPY ./var /var/www/var
-RUN find /var/www/var -type d -exec chmod -v 0770 {} + \
-    && find /var/www/var -type f -exec rm -v {} + \
-    && chown -Rv www-data:www-data /var/www/var
+RUN mkdir -p /var/cache /var/log
+RUN chown -Rv www-data:www-data /var/www/var
 VOLUME ["/var/www/var"]
 
 COPY ./docker/api/*.sh /usr/local/bin/
