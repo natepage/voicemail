@@ -15,12 +15,6 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
     && pecl install xdebug-2.7.2  \
     && rm -rf /var/lib/apt/lists/*
 
-# SOAP
-#RUN apt-get update && apt-get install --no-install-recommends -y \
-#      libxml2-dev \
-#    && docker-php-ext-install soap \
-#    && rm -rf /var/lib/apt/lists/*
-
 RUN mv "${PHP_INI_DIR}/php.ini-production" "${PHP_INI_DIR}/php.ini" \
     && sed -i 's/memory_limit = .*/memory_limit = 512M/' "${PHP_INI_DIR}/php.ini"
 
@@ -86,13 +80,6 @@ RUN find /var/www/var -type d -exec chmod -v 0770 {} + \
     && find /var/www/var -type f -exec rm -v {} + \
     && chown -Rv www-data:www-data /var/www/var
 VOLUME ["/var/www/var"]
-
-### CRON
-RUN apt-get update && apt-get install --no-install-recommends -y cron \
-    && rm -rf /var/lib/apt/lists/*
-COPY ./docker/api/cron/* /tmp/cron/
-RUN cat /tmp/cron/* >> /etc/crontab \
-    && rm -rf /tmp/cron
 
 COPY ./docker/api/*.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/*.sh
