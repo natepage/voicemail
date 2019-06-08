@@ -32,6 +32,9 @@
     "doctrine/reflection": {
         "version": "v1.0.0"
     },
+    "eristemena/dialogflow-fulfillment-webhook-php": {
+        "version": "1.2.1"
+    },
     "illuminate/contracts": {
         "version": "v5.8.19"
     },
