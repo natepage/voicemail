@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Services\Dialogflow\Intents;
 
-use App\Services\Dialogflow\Actions\Questions\SignIn;
 use App\Services\Dialogflow\Interfaces\IntentInterface;
+use Dialogflow\Action\Questions\Permission;
 use Dialogflow\WebhookClient as BaseWebhookClient;
 
 final class AskSignInIntent implements IntentInterface
@@ -20,7 +20,7 @@ final class AskSignInIntent implements IntentInterface
     {
         $conversation = $client->getActionConversation();
 
-        $conversation->ask(new SignIn('For Nathan'));
+        $conversation->ask(new Permission('Give me your name', ['NAME']));
 
         $client->reply($conversation);
     }
