@@ -5,6 +5,7 @@ namespace App\Services\Dialogflow;
 
 use App\Services\Dialogflow\Interfaces\IntentFactoryInterface;
 use App\Services\Dialogflow\Interfaces\WebhookClientInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,14 +16,19 @@ final class WebhookClient implements WebhookClientInterface
     /** @var \App\Services\Dialogflow\Interfaces\IntentFactoryInterface */
     private $intentFactory;
 
+    /** @var \Psr\Log\LoggerInterface */
+    private $logger;
+
     /**
      * WebhookClient constructor.
      *
      * @param \App\Services\Dialogflow\Interfaces\IntentFactoryInterface $intentFactory
+     * @param \Psr\Log\LoggerInterface $logger
      */
-    public function __construct(IntentFactoryInterface $intentFactory)
+    public function __construct(IntentFactoryInterface $intentFactory, LoggerInterface $logger)
     {
         $this->intentFactory = $intentFactory;
+        $this->logger = $logger;
     }
 
     /**
@@ -57,6 +63,8 @@ final class WebhookClient implements WebhookClientInterface
      */
     private function instantiateBaseClient(array $input): BaseWebhookClient
     {
+        $this->logger->critical('Received request', $input);
+
         // TODO: handle client failing to parse input
         return new BaseWebhookClient($input);
     }
@@ -70,6 +78,10 @@ final class WebhookClient implements WebhookClientInterface
      */
     private function respond(BaseWebhookClient $client): Response
     {
-        return new JsonResponse($client->render());
+        $render = $client->render();
+
+        $this->logger->critical('Returned response', $render);
+
+        return new JsonResponse($render);
     }
 }
