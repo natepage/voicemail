@@ -46,7 +46,7 @@ final class SignIn implements QuestionInterface
         $out['intent'] = 'actions.intent.SIGN_IN';
         $out['data'] = [
             '@type' => 'type.googleapis.com/google.actions.v2.SignInValueSpec',
-            'optContext' => $this->context
+//            'optContext' => $this->context
         ];
 
         return $out;
