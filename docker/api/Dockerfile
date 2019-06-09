@@ -84,6 +84,7 @@ COPY --from=composer_install /var/www/vendor /var/www/vendor
 COPY --from=composer_install /var/www/.env.local.php /var/www/.env.local.php
 
 ## CONFIGURE VAR
+RUN rm -rf /var/www/var/cache
 RUN mkdir -p /var/www/var/cache /var/www/var/log
 RUN chown -Rv www-data:www-data /var/www/var
 VOLUME ["/var/www/var"]

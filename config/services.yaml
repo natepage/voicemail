@@ -38,3 +38,10 @@ services:
     App\Services\Dialogflow\Intents\:
         resource: '../src/Services/Dialogflow/Intents'
         public: true
+
+    # Decorate Google PublicKeysRepository with cache
+    App\Services\Google\Interfaces\PublicKeysRepositoryInterface:
+        class: App\Services\Google\WithCachePublicKeysRepository
+        arguments:
+            - '@cache.app'
+            - '@App\Services\Google\PublicKeysRepository'
