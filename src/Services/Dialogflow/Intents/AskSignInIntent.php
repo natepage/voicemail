@@ -21,5 +21,7 @@ final class AskSignInIntent implements IntentInterface
         $conversation = $client->getActionConversation();
 
         $conversation->ask(new SignIn('For Nathan'));
+
+        $client->reply($conversation);
     }
 }
