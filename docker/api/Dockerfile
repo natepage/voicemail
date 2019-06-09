@@ -53,6 +53,13 @@ COPY ./composer.lock /var/www/composer.lock
 
 RUN /usr/local/bin/composer install -o -v
 
+## ENVS
+COPY ./.env /var/www/.env
+COPY ./.env* /var/www/
+
+## DON'T USE .env in prod
+RUN /usr/local/bin/composer dump-env prod
+
 ########################################################################################################################
 ##
 ## API PRODUCTION
@@ -69,10 +76,12 @@ COPY ./config /var/www/config
 COPY ./public /var/www/public
 COPY ./src /var/www/src
 COPY ./translations /var/www/translations
-COPY ./.env /var/www/.env
 
 # VENDOR DIRECTORY
 COPY --from=composer_install /var/www/vendor /var/www/vendor
+
+# PROD ENV
+COPY --from=composer_install /var/www/.env.local.php /var/www/.env.local.php
 
 ## CONFIGURE VAR
 RUN mkdir -p /var/www/var/cache /var/www/var/log
