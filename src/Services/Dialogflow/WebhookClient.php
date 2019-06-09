@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Services\Dialogflow;
 
+use App\Services\Dialogflow\Interfaces\IntentFactoryInterface;
 use App\Services\Dialogflow\Interfaces\WebhookClientInterface;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,17 +12,17 @@ use Dialogflow\WebhookClient as BaseWebhookClient;
 
 final class WebhookClient implements WebhookClientInterface
 {
-    /** @var \Psr\Log\LoggerInterface */
-    private $logger;
+    /** @var \App\Services\Dialogflow\Interfaces\IntentFactoryInterface */
+    private $intentFactory;
 
     /**
      * WebhookClient constructor.
      *
-     * @param \Psr\Log\LoggerInterface $logger
+     * @param \App\Services\Dialogflow\Interfaces\IntentFactoryInterface $intentFactory
      */
-    public function __construct(LoggerInterface $logger)
+    public function __construct(IntentFactoryInterface $intentFactory)
     {
-        $this->logger = $logger;
+        $this->intentFactory = $intentFactory;
     }
 
     /**
@@ -35,8 +35,9 @@ final class WebhookClient implements WebhookClientInterface
     public function handle(Request $request): Response
     {
         $client = $this->instantiateBaseClient(\json_decode($request->getContent(), true));
+        $intent = $this->intentFactory->create($client->getIntent());
 
-        $client->reply('Thank you for requesting this webhook');
+        $intent->handle($client);
 
         return $this->respond($client);
     }
@@ -50,8 +51,6 @@ final class WebhookClient implements WebhookClientInterface
      */
     private function instantiateBaseClient(array $input): BaseWebhookClient
     {
-        $this->logger->critical('Received data from Dialogflow', $input);
-
         // TODO: handle client failing to parse input
         return new BaseWebhookClient($input);
     }
