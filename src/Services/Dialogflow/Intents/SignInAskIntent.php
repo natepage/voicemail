@@ -5,14 +5,14 @@ namespace App\Services\Dialogflow\Intents;
 
 use App\Services\Dialogflow\Actions\Questions\SignIn;
 use App\Services\Dialogflow\Interfaces\IntentInterface;
-use Dialogflow\WebhookClient as BaseWebhookClient;
+use App\Services\Dialogflow\Actions\WebhookClient as BaseWebhookClient;
 
-final class AskSignInIntent implements IntentInterface
+final class SignInAskIntent implements IntentInterface
 {
     /**
      * Handle intent fulfillment for given client.
      *
-     * @param \Dialogflow\WebhookClient $client
+     * @param \App\Services\Dialogflow\Actions\WebhookClient $client
      *
      * @return void
      */

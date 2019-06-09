@@ -6,7 +6,8 @@
 parameters:
     locale: 'en'
     intents:
-        ask_sign_in: App\Services\Dialogflow\Intents\AskSignInIntent
+        sign_in_ask: App\Services\Dialogflow\Intents\SignInAskIntent
+        sign_in_confirm: App\Services\Dialogflow\Intents\SignInConfirmIntent
         peter_weirdo: App\Services\Dialogflow\Intents\PeterWeirdoIntent
         sarah_weirdo: App\Services\Dialogflow\Intents\SarahWeirdoIntent
 
@@ -16,7 +17,9 @@ services:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
         bind:
+            $actionsClientId: '%env(ACTIONS_CLIENT_ID)%'
             $intents: '%intents%'
+            $googlePublicKeysUrl: 'https://www.googleapis.com/oauth2/v3/certs'
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name

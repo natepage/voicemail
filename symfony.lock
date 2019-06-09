@@ -1,4 +1,7 @@
 {
+    "codercat/jwk-to-pem": {
+        "version": "0.0.3"
+    },
     "doctrine/annotations": {
         "version": "1.0",
         "recipe": {
@@ -35,6 +38,9 @@
     "eristemena/dialogflow-fulfillment-webhook-php": {
         "version": "1.2.1"
     },
+    "firebase/php-jwt": {
+        "version": "v5.0.0"
+    },
     "illuminate/contracts": {
         "version": "v5.8.19"
     },
@@ -55,6 +61,9 @@
     },
     "nette/utils": {
         "version": "v2.5.3"
+    },
+    "phpseclib/phpseclib": {
+        "version": "2.0.17"
     },
     "psr/cache": {
         "version": "1.0.1"

@@ -9,7 +9,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Dialogflow\WebhookClient as BaseWebhookClient;
+use App\Services\Dialogflow\Actions\WebhookClient as BaseWebhookClient;
 
 final class WebhookClient implements WebhookClientInterface
 {

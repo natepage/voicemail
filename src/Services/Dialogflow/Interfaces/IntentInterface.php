@@ -3,14 +3,14 @@ declare(strict_types=1);
 
 namespace App\Services\Dialogflow\Interfaces;
 
-use Dialogflow\WebhookClient as BaseWebhookClient;
+use App\Services\Dialogflow\Actions\WebhookClient as BaseWebhookClient;
 
 interface IntentInterface
 {
     /**
      * Handle intent fulfillment for given client.
      *
-     * @param \Dialogflow\WebhookClient $client
+     * @param \App\Services\Dialogflow\Actions\WebhookClient $client
      *
      * @return void
      */
