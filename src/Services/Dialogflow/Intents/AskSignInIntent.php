@@ -18,6 +18,8 @@ final class AskSignInIntent implements IntentInterface
      */
     public function handle(BaseWebhookClient $client): void
     {
-        $client->getActionConversation()->ask(new SignIn('For Nathan'));
+        $conversation = $client->getActionConversation();
+
+        $conversation->ask(new SignIn('For Nathan'));
     }
 }

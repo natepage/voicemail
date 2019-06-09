@@ -6,7 +6,7 @@
 parameters:
     locale: 'en'
     intents:
-        ask_sign_in: App\Services\Dialogflow\Intents\SignInIntent
+        ask_sign_in: App\Services\Dialogflow\Intents\AskSignInIntent
         peter_weirdo: App\Services\Dialogflow\Intents\PeterWeirdoIntent
         sarah_weirdo: App\Services\Dialogflow\Intents\SarahWeirdoIntent
 

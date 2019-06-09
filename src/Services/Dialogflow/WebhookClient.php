@@ -35,9 +35,15 @@ final class WebhookClient implements WebhookClientInterface
     public function handle(Request $request): Response
     {
         $client = $this->instantiateBaseClient(\json_decode($request->getContent(), true));
-        $intent = $this->intentFactory->create($client->getIntent());
 
-        $intent->handle($client);
+        // Make sure request is for Actions on Google
+        if ($client->getRequestSource() !== 'google' || $client->getActionConversation() === null) {
+            $client->reply('Voicemail supports only Google');
+
+            return $this->respond($client);
+        }
+
+        $this->intentFactory->create($client->getIntent())->handle($client);
 
         return $this->respond($client);
     }
