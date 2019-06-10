@@ -58,7 +58,8 @@ COPY ./.env /var/www/.env
 COPY ./.env* /var/www/
 
 ## DON'T USE .env in prod
-RUN /usr/local/bin/composer dump-env prod
+ARG TARGET_ENV=prod
+RUN /usr/local/bin/composer dump-env $TARGET_ENV
 
 ########################################################################################################################
 ##
