@@ -3,13 +3,13 @@ declare(strict_types=1);
 
 namespace App\Services\Dialogflow;
 
+use App\Services\Dialogflow\Actions\WebhookClient as BaseWebhookClient;
 use App\Services\Dialogflow\Interfaces\IntentFactoryInterface;
 use App\Services\Dialogflow\Interfaces\WebhookClientInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\Services\Dialogflow\Actions\WebhookClient as BaseWebhookClient;
 
 final class WebhookClient implements WebhookClientInterface
 {
@@ -40,18 +40,61 @@ final class WebhookClient implements WebhookClientInterface
      */
     public function handle(Request $request): Response
     {
-        $client = $this->instantiateBaseClient(\json_decode($request->getContent(), true));
+        try {
+            $client = $this->instantiateBaseClient(\json_decode($request->getContent(), true));
+        } catch (\Exception $exception) {
+            $this->logger->error(\sprintf(
+                '[Dialogflow] Unable to instantiate base webhook client: %s',
+                $exception->getMessage()
+            ));
+
+            return $this->fallback('Sorry but I couldn\'t understand your request');
+        }
 
         // Make sure request is for Actions on Google
         if ($client->getRequestSource() !== 'google' || $client->getActionConversation() === null) {
             $client->reply('Voicemail supports only Google');
 
-            return $this->respond($client);
+            return $this->respond($client->render());
         }
 
-        $this->intentFactory->create($client->getIntent())->handle($client);
+        try {
+            $this->intentFactory->create($client->getIntent())->handle($client);
+        } catch (\Exception $exception) {
+            $this->logger->error(\sprintf('[Dialogflow] Unable to handle intent: %s', $exception->getMessage()));
+            $client->reply('Sorry but I couldn\'t understand your request');
+        }
 
-        return $this->respond($client);
+        return $this->respond($client->render());
+    }
+
+    /**
+     * Return fallback response when base webhook client not instantiated.
+     *
+     * @param string $message
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    private function fallback(string $message): Response
+    {
+        $fallback = '{
+            "fulfillmentMessages": [
+                {
+                    "platform": "ACTIONS_ON_GOOGLE",
+                    "simpleResponses": {
+                        "simpleResponses": [
+                            {
+                                "textToSpeech": "%s",
+                                "displayText": "%s"
+                            }
+                        ]
+                    }
+                }
+            ],
+            "outputContexts": []
+        }';
+
+        return $this->respond(\json_decode(\sprintf($fallback, $message, $message), true));
     }
 
     /**
@@ -63,25 +106,18 @@ final class WebhookClient implements WebhookClientInterface
      */
     private function instantiateBaseClient(array $input): BaseWebhookClient
     {
-        $this->logger->critical('Received request', $input);
-
-        // TODO: handle client failing to parse input
         return new BaseWebhookClient($input);
     }
 
     /**
-     * Return JSON response for given client.
+     * Return JSON response for given data.
      *
-     * @param \App\Services\Dialogflow\Actions\WebhookClient $client
+     * @param mixed[] $data
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    private function respond(BaseWebhookClient $client): Response
+    private function respond(array $data): Response
     {
-        $render = $client->render();
-
-        $this->logger->critical('Returned response', $render);
-
-        return new JsonResponse($render);
+        return new JsonResponse($data);
     }
 }
