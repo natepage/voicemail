@@ -36,8 +36,6 @@ final class WithCachePublicKeysRepository implements PublicKeysRepositoryInterfa
      */
     public function get(): array
     {
-        \var_dump(\get_class($this->cache));
-
         return $this->cache->get('google_jwks', function (ItemInterface $item): array {
              $item->expiresAfter(3600);
 

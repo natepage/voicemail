@@ -59,7 +59,7 @@ final class WebhookClient implements WebhookClientInterface
      *
      * @param mixed[] $input
      *
-     * @return \Dialogflow\WebhookClient
+     * @return \App\Services\Dialogflow\Actions\WebhookClient
      */
     private function instantiateBaseClient(array $input): BaseWebhookClient
     {
@@ -72,7 +72,7 @@ final class WebhookClient implements WebhookClientInterface
     /**
      * Return JSON response for given client.
      *
-     * @param \Dialogflow\WebhookClient $client
+     * @param \App\Services\Dialogflow\Actions\WebhookClient $client
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
