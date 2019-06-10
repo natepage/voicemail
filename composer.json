@@ -64,6 +64,7 @@
         }
     },
     "require-dev": {
-        "loyaltycorp/easy-docker": "^0.7.0"
+        "loyaltycorp/easy-docker": "^0.7.0",
+        "symfony/profiler-pack": "^1.0"
     }
 }
