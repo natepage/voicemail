@@ -3,11 +3,12 @@ declare(strict_types=1);
 
 namespace App\Services\Dialogflow\Intents;
 
+use App\Services\Dialogflow\Actions\Questions\SignIn;
 use App\Services\Dialogflow\Actions\WebhookClient as BaseWebhookClient;
 use App\Services\Dialogflow\Interfaces\IntentInterface;
 use App\Services\Dialogflow\Traits\IntentTrait;
 
-final class SignInConfirmIntent implements IntentInterface
+final class DefaultWelcomeIntent implements IntentInterface
 {
     use IntentTrait;
 
@@ -18,7 +19,7 @@ final class SignInConfirmIntent implements IntentInterface
      */
     public function getIntentName(): string
     {
-        return 'sign_in_confirm';
+        return 'default_welcome';
     }
 
     /**
@@ -32,17 +33,15 @@ final class SignInConfirmIntent implements IntentInterface
     {
         $conv = $client->getActionConversation();
 
+        // If user not signed in, ask to sign in
         if ($this->isUserSignedIn($conv) === false) {
-            $client->reply('Hmm... I couldn\'t identify you, really sorry about that. Please try to come back later');
+            $client->reply($conv->add(new SignIn()));
 
             return;
         }
 
         $user = $this->getUser($conv);
 
-        $client->reply(\sprintf(
-            'Hey %s! Thank you, I\'m glad to count you as one of my members',
-            $user['given_name']
-        ));
+        $client->reply(\sprintf('Welcome back %s', $user['given_name'] ?? $user['name'] ?? null));
     }
 }

@@ -37,7 +37,9 @@ final class IntentFactory implements IntentFactoryInterface
      */
     public function create(string $intent): IntentInterface
     {
-        if (isset($this->intents[$intent]) && $this->container->has($this->intents[$intent])) {
+//        \dd($this->intents);
+
+        if (isset($this->intents[$intent])) {
             return $this->container->get($this->intents[$intent]);
         }
 
