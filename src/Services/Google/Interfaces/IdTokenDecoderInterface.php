@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Services\Google\Interfaces;
 
+use App\Services\Google\GoogleUser;
+
 interface IdTokenDecoderInterface
 {
     /**
@@ -10,7 +12,7 @@ interface IdTokenDecoderInterface
      *
      * @param string $idToken
      *
-     * @return mixed[]
+     * @return \App\Services\Google\GoogleUser
      */
-    public function decode(string $idToken): array;
+    public function decode(string $idToken): GoogleUser;
 }

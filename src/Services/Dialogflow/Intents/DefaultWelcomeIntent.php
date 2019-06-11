@@ -42,6 +42,6 @@ final class DefaultWelcomeIntent implements IntentInterface
 
         $user = $this->getUser($conv);
 
-        $client->reply(\sprintf('Welcome back %s', $user['given_name'] ?? $user['name'] ?? null));
+        $client->reply(\sprintf('Welcome back %s', $user->getGivenName()));
     }
 }

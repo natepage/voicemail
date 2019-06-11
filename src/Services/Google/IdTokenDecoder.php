@@ -37,9 +37,9 @@ final class IdTokenDecoder implements IdTokenDecoderInterface
      *
      * @param string $idToken
      *
-     * @return mixed[]
+     * @return \App\Services\Google\GoogleUser
      */
-    public function decode(string $idToken): array
+    public function decode(string $idToken): GoogleUser
     {
         $publicKeys = $this->publicKeysRepository->get();
 
@@ -57,6 +57,6 @@ final class IdTokenDecoder implements IdTokenDecoderInterface
             throw new InvalidTokenContentException(\sprintf('Invalid aud "%s"', $decoded['aud'] ?? null));
         }
 
-        return $decoded;
+        return new GoogleUser($decoded);
     }
 }

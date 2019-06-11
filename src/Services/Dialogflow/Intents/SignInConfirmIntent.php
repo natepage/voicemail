@@ -42,7 +42,7 @@ final class SignInConfirmIntent implements IntentInterface
 
         $client->reply(\sprintf(
             'Hey %s! Thank you, I\'m glad to count you as one of my members',
-            $user['given_name']
+            $user->getGivenName()
         ));
     }
 }

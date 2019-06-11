@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Services\Dialogflow\Traits;
 
 use App\Services\Dialogflow\Actions\Conversation;
+use App\Services\Google\GoogleUser;
 use App\Services\Google\Interfaces\IdTokenDecoderInterface;
 
 trait IntentTrait
@@ -30,9 +31,9 @@ trait IntentTrait
      *
      * @param \App\Services\Dialogflow\Actions\Conversation $conv
      *
-     * @return mixed[]
+     * @return \App\Services\Google\GoogleUser
      */
-    private function getUser(Conversation $conv): array
+    private function getUser(Conversation $conv): GoogleUser
     {
         return $this->idTokenDecoder->decode($conv->getUser()->getIdToken());
     }
