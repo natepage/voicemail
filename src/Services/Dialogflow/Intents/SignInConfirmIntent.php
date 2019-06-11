@@ -3,13 +3,28 @@ declare(strict_types=1);
 
 namespace App\Services\Dialogflow\Intents;
 
-use App\Services\Dialogflow\Actions\WebhookClient as BaseWebhookClient;
-use App\Services\Dialogflow\Interfaces\IntentInterface;
-use App\Services\Dialogflow\Traits\IntentTrait;
+use App\Factories\Interfaces\UserFactoryInterface;
+use App\Repositories\Interfaces\UserRepositoryInterface;
 
-final class SignInConfirmIntent implements IntentInterface
+final class SignInConfirmIntent extends AbstractSignedInIntent
 {
-    use IntentTrait;
+    /** @var \App\Factories\Interfaces\UserFactoryInterface */
+    private $userFactory;
+
+    /** @var \App\Repositories\Interfaces\UserRepositoryInterface */
+    private $userRepository;
+
+    /**
+     * SignInConfirmIntent constructor.
+     *
+     * @param \App\Factories\Interfaces\UserFactoryInterface $userFactory
+     * @param \App\Repositories\Interfaces\UserRepositoryInterface $userRepository
+     */
+    public function __construct(UserFactoryInterface $userFactory, UserRepositoryInterface $userRepository)
+    {
+        $this->userFactory = $userFactory;
+        $this->userRepository = $userRepository;
+    }
 
     /**
      * Get intent name.
@@ -22,25 +37,35 @@ final class SignInConfirmIntent implements IntentInterface
     }
 
     /**
-     * Handle intent fulfillment for given client.
-     *
-     * @param \App\Services\Dialogflow\Actions\WebhookClient $client
+     * Handle for children intent once user is signed in.
      *
      * @return void
      */
-    public function handle(BaseWebhookClient $client): void
+    protected function doHandle(): void
     {
-        $conv = $client->getActionConversation();
+        $googleUser = $this->getUser();
+        $user = $this->userRepository->findOneByEmail($googleUser->getEmail());
 
-        if ($this->isUserSignedIn($conv) === false) {
-            $client->reply('Hmm... I couldn\'t identify you, really sorry about that. Please try to come back later');
+        // User already exists in db
+        if ($user !== null) {
+            $this->reply(\sprintf('Welcome back %s', $user->getGivenName()));
 
             return;
         }
 
-        $user = $this->getUser($conv);
+        // Create new user in db
+        try {
+            $user = $this->userFactory->create($googleUser->toArray());
+            $this->userRepository->save($user);
+        } catch (\Exception $exception) {
+            $this->logger->error(\sprintf('Unable to create User: %s', $exception->getMessage()));
 
-        $client->reply(\sprintf(
+            $this->reply('Sorry an error occurred while saving your information, please retry later');
+
+            return;
+        }
+
+        $this->reply(\sprintf(
             'Hey %s! Thank you, I\'m glad to count you as one of my members',
             $user->getGivenName()
         ));

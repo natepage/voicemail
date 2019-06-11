@@ -77,4 +77,14 @@ final class GoogleUser
     {
         return $this->data['name'];
     }
+
+    /**
+     * Get user array representation.
+     *
+     * @return mixed[]
+     */
+    public function toArray(): array
+    {
+        return $this->data;
+    }
 }

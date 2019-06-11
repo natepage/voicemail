@@ -27,8 +27,21 @@ services:
             context: ./
             dockerfile: ./docker/api/Dockerfile
         restart: always
+        depends_on:
+          - voicemail_mysql
         expose:
           - 9000
+
+    voicemail_mysql:
+        image: mysql:5.7
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: voicemail
+            MYSQL_DATABASE: voicemail
+            MYSQL_USER: voicemail
+            MYSQL_PASSWORD: voicemail
+        ports:
+            - '3306:3306'
 
 networks:
     web:

@@ -10,6 +10,9 @@ final class User extends BaseUser
     /** @var null|string */
     private $idToken;
 
+    /** @var null|string */
+    private $locale;
+
     /**
      * User constructor.
      *
@@ -20,6 +23,7 @@ final class User extends BaseUser
         parent::__construct($data);
 
         $this->idToken = $data['idToken'] ?? null;
+        $this->locale = $data['locale'] ?? null;
     }
 
     /**
@@ -30,5 +34,15 @@ final class User extends BaseUser
     public function getIdToken(): ?string
     {
         return $this->idToken;
+    }
+
+    /**
+     * Get locale.
+     *
+     * @return null|string
+     */
+    public function getLocale(): ?string
+    {
+        return $this->locale;
     }
 }

@@ -9,6 +9,7 @@
         "codercat/jwk-to-pem": "^0.0.3",
         "eristemena/dialogflow-fulfillment-webhook-php": "^1.2",
         "firebase/php-jwt": "^5.0",
+        "loyaltycorp/easy-repository": "^0.7.3",
         "sensio/framework-extra-bundle": "^5.3",
         "symfony/cache": "4.3.*",
         "symfony/console": "4.3.*",
@@ -16,6 +17,7 @@
         "symfony/flex": "^1.1",
         "symfony/framework-bundle": "4.3.*",
         "symfony/monolog-bundle": "^3.3",
+        "symfony/orm-pack": "^1.0",
         "symfony/yaml": "4.3.*"
     },
     "config": {
@@ -65,6 +67,7 @@
     },
     "require-dev": {
         "loyaltycorp/easy-docker": "^0.7.0",
+        "symfony/maker-bundle": "^1.11",
         "symfony/profiler-pack": "^1.0"
     }
 }
