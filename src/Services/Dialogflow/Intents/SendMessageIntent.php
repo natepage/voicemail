@@ -22,7 +22,7 @@ final class SendMessageIntent extends AbstractSignedInIntent
      */
     protected function doHandle(): void
     {
-        \dump($this->client->getParameters());
+        $this->logger->error('Client parameters', $this->client->getParameters());
 
         $this->reply('Sure I will send the message');
     }
