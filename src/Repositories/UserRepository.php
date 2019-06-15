@@ -5,9 +5,8 @@ namespace App\Repositories;
 
 use App\Entity\User;
 use App\Repositories\Interfaces\UserRepositoryInterface;
-use LoyaltyCorp\EasyRepository\Implementations\Doctrine\ORM\AbstractDoctrineOrmRepository;
 
-final class UserRepository extends AbstractDoctrineOrmRepository implements UserRepositoryInterface
+final class UserRepository extends AbstractRepository implements UserRepositoryInterface
 {
     /**
      * Find one user by email.
